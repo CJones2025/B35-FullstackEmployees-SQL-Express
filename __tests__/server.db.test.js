@@ -15,7 +15,6 @@ beforeAll(async () => {
 });
 afterAll(async () => {
   await db.query("ROLLBACK");
-  await db.end();
 });
 
 describe('"employees" queries', () => {
@@ -45,7 +44,7 @@ describe('"employees" queries', () => {
         name: employee.name,
         birthday: expect.any(Date),
         salary: employee.salary,
-      }),
+      })
     );
   });
 
@@ -62,7 +61,7 @@ describe('"employees" queries', () => {
         name: employee.name,
         birthday: expect.any(Date),
         salary: employee.salary,
-      }),
+      })
     );
   });
 

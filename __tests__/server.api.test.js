@@ -24,25 +24,27 @@ test('GET / sends the message "Welcome to the Fullstack Employees API."', async 
 
 test("GET /employees sends all employees", async () => {
   db.query.mockResolvedValue({ rows: [mockEmployee, mockEmployee] });
-  const response = await request(app).get("/employees");
+  const response = await request(app).get("/api/employees");
   expect(response.status).toBe(200);
   expect(response.body).toEqual([mockEmployee, mockEmployee]);
 });
 
 describe("POST /employees", () => {
   it("sends 400 if request has no body", async () => {
-    const response = await request(app).post("/employees");
+    const response = await request(app).post("/api/employees");
     expect(response.status).toBe(400);
   });
 
   it("sends 400 if request body does not have required fields", async () => {
-    const response = await request(app).post("/employees").send({});
+    const response = await request(app).post("/api/employees").send({});
     expect(response.status).toBe(400);
   });
 
   it("creates a employee and sends it with status 201", async () => {
     db.query.mockResolvedValue({ rows: [mockEmployee] });
-    const response = await request(app).post("/employees").send(mockEmployee);
+    const response = await request(app)
+      .post("/api/employees")
+      .send(mockEmployee);
     expect(response.status).toBe(201);
     expect(response.body).toEqual(mockEmployee);
   });
@@ -50,7 +52,7 @@ describe("POST /employees", () => {
 
 describe("GET /employees/:id", () => {
   it("sends 400 if id is not a positive integer", async () => {
-    const response = await request(app).get("/employees/1e10");
+    const response = await request(app).get("/api/employees/1e10");
     expect(response.status).toBe(400);
   });
 
@@ -62,7 +64,7 @@ describe("GET /employees/:id", () => {
 
   it("sends the employee if it exists", async () => {
     db.query.mockResolvedValue({ rows: [mockEmployee] });
-    const response = await request(app).get("/employees/1");
+    const response = await request(app).get("/api/employees/1");
     expect(response.status).toBe(200);
     expect(response.body).toEqual(mockEmployee);
   });
@@ -70,7 +72,7 @@ describe("GET /employees/:id", () => {
 
 describe("DELETE /employees/:id", () => {
   it("sends 400 if id is not a positive integer", async () => {
-    const response = await request(app).delete("/employees/1e10");
+    const response = await request(app).delete("/api/employees/1e10");
     expect(response.status).toBe(400);
   });
 
@@ -82,7 +84,7 @@ describe("DELETE /employees/:id", () => {
 
   it("deletes the employee and sends 204", async () => {
     db.query.mockResolvedValue({ rows: [mockEmployee] });
-    const response = await request(app).delete("/employees/1");
+    const response = await request(app).delete("/api/employees/1");
     expect(response.status).toBe(204);
   });
 });
@@ -90,20 +92,20 @@ describe("DELETE /employees/:id", () => {
 describe("PUT /employees/:id", () => {
   it("sends 400 if request has no body", async () => {
     db.query.mockResolvedValue({ rows: [mockEmployee] });
-    const response = await request(app).put("/employees/1");
+    const response = await request(app).put("/api/employees/1");
     expect(response.status).toBe(400);
   });
 
   it("sends 400 if request body does not have required fields", async () => {
     db.query.mockResolvedValue({ rows: [mockEmployee] });
-    const response = await request(app).put("/employees/1").send({});
+    const response = await request(app).put("/api/employees/1").send({});
     expect(response.status).toBe(400);
   });
 
   it("sends 400 if id is not a positive integer", async () => {
     db.query.mockResolvedValue({ rows: [mockEmployee] });
     const response = await request(app)
-      .put("/employees/1e10")
+      .put("/api/employees/1e10")
       .send(mockEmployee);
     expect(response.status).toBe(400);
   });
@@ -116,7 +118,9 @@ describe("PUT /employees/:id", () => {
 
   it("updates and sends the employee", async () => {
     db.query.mockResolvedValue({ rows: [mockEmployee] });
-    const response = await request(app).put("/employees/1").send(mockEmployee);
+    const response = await request(app)
+      .put("/api/employees/1")
+      .send(mockEmployee);
     expect(response.status).toBe(200);
     expect(response.body).toEqual(mockEmployee);
   });

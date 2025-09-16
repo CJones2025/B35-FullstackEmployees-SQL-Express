@@ -1,10 +1,16 @@
+import "dotenv/config";
 import app from "#app";
 import db from "#db/client";
 
-const PORT = process.env.PORT ?? 3000;
+const PORT = process.env.PORT || 3000;
 
-await db.connect();
-
-app.listen(PORT, () => {
-  console.log(`Listening on port ${PORT}...`);
-});
+db.connect()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("Failed to connect to database:", err);
+    process.exit(1);
+  });

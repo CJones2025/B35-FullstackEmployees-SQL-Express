@@ -8,7 +8,6 @@ beforeAll(async () => {
 });
 afterAll(async () => {
   await db.query("ROLLBACK");
-  await db.end();
 });
 
 describe('"employees" table', () => {
@@ -52,7 +51,7 @@ describe('"employees" table', () => {
 
     test('"birthday" exists, is type date, and is not nullable', () => {
       const release = columns.find(
-        (column) => column.column_name === "birthday",
+        (column) => column.column_name === "birthday"
       );
       expect(release).toBeDefined();
       expect(release.data_type).toBe("date");
